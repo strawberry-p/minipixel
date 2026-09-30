@@ -11,7 +11,21 @@ let lpx = [0,0,g("0-0")]
 let data = []
 let m = false
 function r(c) {return "rgb("+c[0]+","+c[1]+","+c[2]+")"}
+function r2(c) {let op = "100%"; if (c[3] > 0) {op = "0%"}; return "rgb("+c[0]+" "+c[1]+" "+c[2]+" / "+op+")"}
 function hover(y,x,el) {lpx = [y,x,el]; if (m) {g(y+"-"+x).style.backgroundColor = r(cur); data[y][x] = cur}}
+function expo() {
+    const ctx = g("cv").getContext("2d")
+    for (let y = 0; y < data.length; y++) {
+        for (let x = 0; x < data[y].length; x++) {
+            ctx.fillStyle = r2(data[y][x]);
+            ctx.fillRect(x, y, 1, 1);
+        }
+    }
+    const url = g("cv").toDataURL("image/png")
+    p(url)
+    g("a").href = url
+    g("a").click()
+}
 
 function but(ind) {
     let b_row = clr[ind]
@@ -22,9 +36,12 @@ function but(ind) {
         b.id = ind+"b"+i
         b.class = "but"
         b.style.backgroundColor = r(b_row[i])
-        if (b_row[i][3] == 111){b.text = "↓"}
         bd.appendChild(b)
-        b.addEventListener("mousedown",Function("cur = ["+b_row[i]+"]; arguments[0].stopPropagation();p(cur)"))
+        if (b_row[i][3] == 111){let txt = document.createTextNode("↓");
+            b.appendChild(txt);
+            b.style.color = "white";
+            b.addEventListener("mousedown",function(ev) {ev.stopPropagation(); expo()})} else {
+        b.addEventListener("mousedown",Function("cur = ["+b_row[i]+"]; arguments[0].stopPropagation();p(cur)")) }
 
     }
 }
@@ -46,7 +63,7 @@ function onload() {
             el.class = i+" "+j+" th"
             el.style.backgroundColor = "white"
             let f = Function("hover("+i+","+j+",this)")
-            if (i == j) {el.style.backgroundColor = r(clr[0][4]); tmp[tmp.length-1] = [255, 165, 0, 0], console.log(r(clr[0][4]))}
+            if (i == j) {el.style.backgroundColor = r(clr[0][4]); tmp[tmp.length-1] = [255, 165, 0, 0]}
             row.appendChild(el)
             el.addEventListener("mouseover",f)
 
@@ -55,8 +72,10 @@ function onload() {
         tab.appendChild(row)
     }
     p(Date.now()-t)
-    p(data)
     but(0)
     but(1)
+    g("cv").height = y_s
+    g("cv").width = x_s
+    p(Date.now()-t)
 }
 

@@ -1,4 +1,13 @@
 th {
-    width:0.5rem;
-    height:0.5rem;
+    width:0.7rem;
+    height:0.7rem;
 }
+button {
+    width:2.8rem;
+    height:2.8rem;
+    margin:0.5rem
+}
+body {
+    background-color: rgb(192,192,192);
+}
+.bd {text-align: center}
